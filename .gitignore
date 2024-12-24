@@ -223,7 +223,7 @@ target/
 *.metadata
 *.bak
 *.tmp
-*.log
+*.logyarn stat
 *.lock
 *.goutputstream-*
 /workspace.xml

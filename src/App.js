@@ -59,7 +59,7 @@ const styles = {
     fontFamily: 'sans-serif',
     backgroundColor: '#F9FAFB',
     minHeight: '100vh',
-    padding: '20px',
+    padding: '10px',
     minWidth: '320px',
     boxSizing: 'border-box',
     overflow: 'hidden',
