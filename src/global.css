@@ -1,0 +1,11 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; 
+    overflow: auto;  /* 스크롤을 숨김 */
+  }
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
