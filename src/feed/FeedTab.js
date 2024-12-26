@@ -11,6 +11,7 @@ function FeedTab() {
 
   const debounceTimer = useRef(null);
 
+  // 서버로부터 제품 리스트 가져오기
   const fetchFeedOptions = async (query) => {
     setLoading(true);
     try {
@@ -29,6 +30,7 @@ function FeedTab() {
     }
   };
 
+  // 검색어 변경 시 서버 요청
   const handleSearchChange = (e) => {
     const query = e.target.value;
 
@@ -49,13 +51,15 @@ function FeedTab() {
     }, 500);
   };
 
+  // 제품 추가
   const handleAddProduct = (product) => {
     setSelectedProducts((prevSelected) => [
       ...prevSelected,
-      { ...product, quantity: 1, unit: "g" }, // 기본값은 "g"
+      { ...product, quantity: 1, unit: "g", feedingTime: "", notes: "" }, // 기본값은 "g", feedingTime, notes 추가
     ]);
   };
 
+  // 입력값 변경 (수량, 단위, feedingTime, notes)
   const handleInputChange = (id, field, value) => {
     setSelectedProducts((prevSelected) =>
       prevSelected.map((product) =>
@@ -91,6 +95,39 @@ function FeedTab() {
   useEffect(() => {
     calculateTotalCalories();
   }, [selectedProducts]);
+
+  // 서버로 POST 요청 보내기
+  const handleSubmit = async () => {
+    const mealData = selectedProducts.map((product) => ({
+      catId: 1, // catId 값은 적절히 설정
+      date: new Date().toISOString().split("T")[0], // 오늘 날짜
+      foodName: product.name,
+      amount: product.quantity,
+      category: product.type || "주식", // 기본값은 '주식'
+      productType: product.foodType || "Unknown", // 기본값은 'Unknown'
+      calories: product.calculatedCalories,
+      feedingTime: product.feedingTime || "",
+      notes: product.notes || "",
+    }));
+
+    try {
+      const response = await fetch("http://localhost:8088/feed/meals", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(mealData),
+      });
+
+      if (response.ok) {
+        console.log("급여 정보가 성공적으로 저장되었습니다.");
+      } else {
+        console.error("급여 정보 저장에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("서버 요청 중 오류 발생:", error);
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -128,6 +165,8 @@ function FeedTab() {
               product={product}
               onQuantityChange={handleInputChange}
               onUnitChange={handleInputChange}
+              onFeedingTimeChange={handleInputChange}
+              onNotesChange={handleInputChange}
             />
           ))}
         </div>
@@ -139,6 +178,11 @@ function FeedTab() {
           <h4>총 섭취 칼로리: {totalCalories.toFixed(2)} 칼로리</h4>
         </div>
       )}
+
+      {/* 입력하기 버튼 */}
+      <button onClick={handleSubmit} style={styles.submitButton}>
+        입력하기
+      </button>
     </div>
   );
 }
@@ -201,6 +245,15 @@ const styles = {
     backgroundColor: "#F5F5F5",
     borderRadius: "10px",
     fontSize: "1.2rem",
+  },
+  submitButton: {
+    padding: "10px 20px",
+    backgroundColor: "#4CAF50",
+    border: "none",
+    borderRadius: "8px",
+    color: "#fff",
+    cursor: "pointer",
+    marginTop: "20px",
   },
 };
 
