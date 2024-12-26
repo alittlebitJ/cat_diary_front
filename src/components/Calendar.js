@@ -8,9 +8,11 @@ const WeekCalendar = ({ onDateChange, selectedDate }) => {
 
   useEffect(() => {
     if (selectedDate) {
-      setDate(selectedDate); // App.js에서 받은 selectedDate가 변경되면 상태 업데이트
+      const adjustedDate = new Date(Date.UTC(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate())); // UTC 변환
+      setDate(adjustedDate);
     }
   }, [selectedDate]);
+  
 
   // 한 주의 시작일 계산 (월요일 기준)
   const startOfWeek = (date) => {
@@ -39,11 +41,13 @@ const WeekCalendar = ({ onDateChange, selectedDate }) => {
     return days;
   };
 
-  // 날짜 변경 시 처리
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-    onDateChange(newDate); // 날짜가 변경되면 App.js로 전달
-  };
+// 날짜 변경 시 처리
+const handleDateChange = (newDate) => {
+  const adjustedDate = new Date(Date.UTC(newDate.getFullYear(), newDate.getMonth(), newDate.getDate())); // UTC로 변환
+  console.log('Selected Date (UTC adjusted):', adjustedDate);
+  setDate(adjustedDate);
+  onDateChange(adjustedDate); // UTC로 조정된 날짜 전달
+};
 
   // 월간뷰 전환 버튼 클릭 시
   const handleViewToggle = () => {
