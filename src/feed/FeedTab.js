@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import SelectedFeedRow from "./SelectedFeedRow"; // SelectedFeedRow 컴포넌트 추가
 
 function FeedTab() {
   const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
@@ -69,11 +70,19 @@ function FeedTab() {
   const calculateTotalCalories = () => {
     let total = 0;
     selectedProducts.forEach((product) => {
-      if (product.unit === "g") {
-        total += product.quantity * product.caloriesPerGram; // 그램 단위일 경우
-      } else {
-        total += product.quantity * product.caloriesPerUnit; // 개수 단위일 경우
+      let calculatedCalories = 0;
+
+      // 그람 단위일 경우 칼로리 계산
+      if (product.unit === "g" && product.caloriesPerGram) {
+        calculatedCalories = product.quantity * product.caloriesPerGram;
+      } 
+      // 개수 단위일 경우 칼로리 계산
+      else if (product.unit === "개" && product.caloriesPerUnit) {
+        calculatedCalories = product.quantity * product.caloriesPerUnit;
       }
+
+      product.calculatedCalories = calculatedCalories;
+      total += calculatedCalories;
     });
     setTotalCalories(total);
   };
@@ -95,20 +104,16 @@ function FeedTab() {
         />
         
         {/* 검색 결과 */}
-        {!loading && !error && (
+        {!loading && !error && feedOptions.length > 0 && (
           <div style={styles.results}>
-            {feedOptions.length === 0 && searchQuery !== "" ? (
-              <p>검색 결과가 없습니다.</p>
-            ) : (
-              feedOptions.map((feed) => (
-                <div key={feed.id} style={styles.feedItem}>
-                  <h4>{feed.name}</h4>
-                  <button style={styles.addButton} onClick={() => handleAddProduct(feed)}>
-                    추가
-                  </button>
-                </div>
-              ))
-            )}
+            {feedOptions.map((feed) => (
+              <div key={feed.id} style={styles.feedItem}>
+                <h4>{feed.name}</h4>
+                <button style={styles.addButton} onClick={() => handleAddProduct(feed)}>
+                  추가
+                </button>
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -118,24 +123,12 @@ function FeedTab() {
         <div style={styles.selectedProductsContainer}>
           <h3>선택된 제품들</h3>
           {selectedProducts.map((product) => (
-            <div key={product.id} style={styles.selectedProductItem}>
-              <span>{product.type} - {product.name}</span>
-              <input
-                type="number"
-                value={product.quantity}
-                onChange={(e) => handleInputChange(product.id, 'quantity', e.target.value)}
-                style={styles.quantityInput}
-                min="1"
-              />
-              <select
-                value={product.unit}
-                onChange={(e) => handleInputChange(product.id, 'unit', e.target.value)}
-                style={styles.unitSelect}
-              >
-                <option value="g">g</option>
-                <option value="개">개</option>
-              </select>
-            </div>
+            <SelectedFeedRow
+              key={product.id}
+              product={product}
+              onQuantityChange={handleInputChange}
+              onUnitChange={handleInputChange}
+            />
           ))}
         </div>
       )}
@@ -201,22 +194,6 @@ const styles = {
     borderRadius: "10px",
     marginTop: "30px",
     textAlign: "left",
-  },
-  selectedProductItem: {
-    margin: "10px 0",
-    padding: "10px",
-    borderBottom: "1px solid #ddd",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  quantityInput: {
-    width: "60px",
-    padding: "5px",
-    marginRight: "10px",
-  },
-  unitSelect: {
-    padding: "5px",
   },
   totalCaloriesContainer: {
     marginTop: "20px",
