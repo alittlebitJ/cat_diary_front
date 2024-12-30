@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import SelectedFeedRow from "./SelectedFeedRow"; // SelectedFeedRow 컴포넌트 추가
 
-function FeedTab() {
+function FeedTab({ selectedDate }) {
   const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
   const [feedOptions, setFeedOptions] = useState([]); // 서버로부터 받은 제품 리스트
   const [loading, setLoading] = useState(false); // 로딩 상태
@@ -96,38 +96,50 @@ function FeedTab() {
     calculateTotalCalories();
   }, [selectedProducts]);
 
-  // 서버로 POST 요청 보내기
-  const handleSubmit = async () => {
-    const mealData = selectedProducts.map((product) => ({
-      catId: 1, // catId 값은 적절히 설정
-      date: new Date().toISOString().split("T")[0], // 오늘 날짜
-      foodName: product.name,
-      amount: product.quantity,
-      category: product.type || "주식", // 기본값은 '주식'
-      productType: product.foodType || "Unknown", // 기본값은 'Unknown'
-      calories: product.calculatedCalories,
-      feedingTime: product.feedingTime || "",
-      notes: product.notes || "",
-    }));
+// 서버로 POST 요청 보내기
+const handleSubmit = async () => {
+  const mealData = selectedProducts.map((product) => ({
+    catId: 1, // catId 값은 적절히 설정
+    date: selectedDate,
+    foodName: product.name,
+    amount: product.quantity,
+    category: product.type || "주식", // 기본값은 '주식'
+    productType: product.foodType || "Unknown", // 기본값은 'Unknown'
+    calories: product.calculatedCalories,
+    feedingTime: product.feedingTime || "",
+    notes: product.notes || "",
+  }));
 
-    try {
-      const response = await fetch("http://localhost:8088/feed/meals", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(mealData),
-      });
+  try {
+    const response = await fetch("http://localhost:8088/feed/meals", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(mealData),
+    });
 
-      if (response.ok) {
-        console.log("급여 정보가 성공적으로 저장되었습니다.");
-      } else {
-        console.error("급여 정보 저장에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("서버 요청 중 오류 발생:", error);
+    if (response.ok) {
+      alert("급여 정보가 성공적으로 저장되었습니다.");
+      setSelectedProducts([]);
+      setTotalCalories(0);
+      setSearchQuery("");
+      setFeedOptions([]);
+    } else {
+      alert("급여 정보 저장에 실패했습니다.");
     }
+  } catch (error) {
+    alert("서버 요청 중 오류 발생: " + error.message);
+  }
+};
+
+  // 추가된 급여 내역 삭제
+  const handleDeleteProduct = (id) => {
+    setSelectedProducts((prevSelected) =>
+      prevSelected.filter((product) => product.id !== id)
+    );
   };
+  
 
   return (
     <div style={styles.container}>
@@ -167,6 +179,7 @@ function FeedTab() {
               onUnitChange={handleInputChange}
               onFeedingTimeChange={handleInputChange}
               onNotesChange={handleInputChange}
+              onDelete={handleDeleteProduct}
             />
           ))}
         </div>
@@ -203,14 +216,16 @@ const styles = {
     padding: "20px",
     borderRadius: "10px",
     marginBottom: "20px",
+    outline: "none",
   },
   searchInput: {
     padding: "8px",
     fontSize: "1rem",
-    width: "100%",
+    width: "90%",
     marginBottom: "10px",
     borderRadius: "8px",
     border: "1px solid #ddd",
+    outline: "none",
   },
   results: {
     marginTop: "10px",
@@ -248,12 +263,13 @@ const styles = {
   },
   submitButton: {
     padding: "10px 20px",
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#b98c7b",
     border: "none",
     borderRadius: "8px",
     color: "#fff",
     cursor: "pointer",
-    marginTop: "20px",
+    marginBottom: "10px",
+    marginTop: "10px",
   },
 };
 
