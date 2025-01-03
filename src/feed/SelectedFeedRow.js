@@ -1,19 +1,32 @@
 import React from "react";
 
-function SelectedFeedRow({ product, onQuantityChange, onUnitChange, onFeedingTimeChange, onNotesChange, onDelete }) {
+function SelectedFeedRow({
+  product,
+  onQuantityChange,
+  onUnitChange,
+  onFeedingTimeChange,
+  onNotesChange,
+  onDelete,
+}) {
   return (
     <div style={styles.selectedProductItem}>
       {/* 첫 번째 줄: 급여시간, 습식/주식, food type, 상품명 */}
       <div style={styles.row}>
         <input
-          type="text"
-          placeholder="급여시간"
+          type="time"
           value={product.feedingTime || ""}
-          onChange={(e) => onFeedingTimeChange(product.id, 'feedingTime', e.target.value)}
+          onChange={(e) => onFeedingTimeChange(product.uniqueId, 'feedingTime', e.target.value)}  // uniqueId 사용
           style={styles.feedingTimeInput}
         />
-        <span>{product.type || "습식"}</span>
-        <span>{product.foodType || "Unknown"}</span>
+        <div
+          style={{
+            ...styles.typeBadge,
+            backgroundColor: product.type === "주식" ? "rgb(204, 255, 204)" : product.type === "간식" ? "rgb(254, 215, 195)" : "#fff",
+          }}
+        >
+          {product.type || "습식"}
+        </div>
+        <span style={styles.foodTypeText}>{product.foodType || "Unknown"}</span>
         <span>{product.name}</span>
       </div>
 
@@ -22,13 +35,13 @@ function SelectedFeedRow({ product, onQuantityChange, onUnitChange, onFeedingTim
         <input
           type="number"
           value={product.quantity}
-          onChange={(e) => onQuantityChange(product.id, 'quantity', e.target.value)}
+          onChange={(e) => onQuantityChange(product.uniqueId, 'quantity', e.target.value)}  // uniqueId 사용
           style={styles.quantityInput}
           min="1"
         />
         <select
           value={product.unit}
-          onChange={(e) => onUnitChange(product.id, 'unit', e.target.value)}
+          onChange={(e) => onUnitChange(product.uniqueId, 'unit', e.target.value)}  // uniqueId 사용
           style={styles.unitSelect}
         >
           <option value="g">g</option>
@@ -45,11 +58,11 @@ function SelectedFeedRow({ product, onQuantityChange, onUnitChange, onFeedingTim
           type="text"
           placeholder="비고"
           value={product.notes || ""}
-          onChange={(e) => onNotesChange(product.id, 'notes', e.target.value)}
-          style={styles.input}
+          onChange={(e) => onNotesChange(product.uniqueId, 'notes', e.target.value)}  // uniqueId 사용
+          style={styles.notesInput}
         />
         <button
-          onClick={() => onDelete(product.id)} // 삭제 버튼 클릭 시 호출
+          onClick={() => onDelete(product.uniqueId)}  // uniqueId 사용
           style={styles.deleteButton}
         >
           삭제
@@ -62,9 +75,13 @@ function SelectedFeedRow({ product, onQuantityChange, onUnitChange, onFeedingTim
 const styles = {
   selectedProductItem: {
     margin: "10px 0",
-    borderBottom: "1px solid #ddd",
+    border: "1px solid #ddd",
+    borderRadius: "10px",
+    padding: "15px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
     display: "flex",
     flexDirection: "column",
+    backgroundColor: "#fff",
   },
   row: {
     display: "flex",
@@ -72,14 +89,37 @@ const styles = {
     marginBottom: "10px",
   },
   feedingTimeInput: {
-    width: "40px",
+    width: "80px",  // 크기 50px로 고정
     padding: "8px",
     marginRight: "10px",
     fontSize: "1rem",
     borderRadius: "8px",
     border: "1px solid #ddd",
+    flexShrink: 0, // 크기를 고정하고 다른 요소들이 밀리지 않게 함
+    outline: "none",
+  },
+  notesInput: {
+    padding: "8px",
+    marginRight: "10px",
+    fontSize: "1rem",
+    border: "none",  // 외곽선 제거
+    borderBottom: "2px solid #eee",  // 아래쪽 보더만 추가
     flex: 1,
     outline: "none",
+  },
+  typeBadge: {
+    fontSize: "0.9rem",  // 글자 크기 줄이기
+    padding: "2px 5px",
+    marginRight: "10px",
+    borderRadius: "8px",
+    fontWeight: "bold",
+    color: "#555",
+    textAlign: "center",
+  },
+  foodTypeText: {
+    fontSize: "0.9rem",  // 글자 크기 줄이기
+    color: "#aaa",  // 흐리게 만들기
+    marginRight: "10px",
   },
   input: {
     padding: "8px",
@@ -99,7 +139,7 @@ const styles = {
   },
   quantityInput: {
     width: "60px",
-    padding: "px",
+    padding: "8px",
     marginRight: "10px",
     borderRadius: "8px",
     outline: "none",
@@ -108,7 +148,10 @@ const styles = {
   unitSelect: {
     padding: "5px",
     marginRight: "10px",
-    outline: "none",
+    borderRadius: "8px",  // select에 border radius 추가
+    border: "1px solid #ddd",
+    outline: "none",  // 아웃라인 제거
+    appearance: "none",  // select의 화살표 숨기기
   },
   caloriesText: {
     marginLeft: "10px",
@@ -124,5 +167,6 @@ const styles = {
     cursor: "pointer",
   },
 };
+
 
 export default SelectedFeedRow;

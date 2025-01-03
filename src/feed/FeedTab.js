@@ -53,17 +53,18 @@ function FeedTab({ selectedDate }) {
 
   // 제품 추가
   const handleAddProduct = (product) => {
+    const uniqueId = selectedProducts.length + 1;  // 배열의 길이를 이용해 인덱스 생성
     setSelectedProducts((prevSelected) => [
       ...prevSelected,
-      { ...product, quantity: 1, unit: "g", feedingTime: "", notes: "" }, // 기본값은 "g", feedingTime, notes 추가
+      { ...product, uniqueId, quantity: 1, unit: "g", feedingTime: "", notes: "" }, // 기본값은 "g", feedingTime, notes 추가
     ]);
   };
 
   // 입력값 변경 (수량, 단위, feedingTime, notes)
-  const handleInputChange = (id, field, value) => {
+  const handleInputChange = (uniqueId, field, value) => {
     setSelectedProducts((prevSelected) =>
       prevSelected.map((product) =>
-        product.id === id
+        product.uniqueId === uniqueId
           ? { ...product, [field]: value }
           : product
       )
@@ -134,9 +135,9 @@ const handleSubmit = async () => {
 };
 
   // 추가된 급여 내역 삭제
-  const handleDeleteProduct = (id) => {
+  const handleDeleteProduct = (uniqueId) => {
     setSelectedProducts((prevSelected) =>
-      prevSelected.filter((product) => product.id !== id)
+      prevSelected.filter((product) => product.uniqueId !== uniqueId)
     );
   };
   
@@ -170,10 +171,9 @@ const handleSubmit = async () => {
       {/* 선택된 제품 리스트 영역 */}
       {selectedProducts.length > 0 && (
         <div style={styles.selectedProductsContainer}>
-          <h3>선택된 제품들</h3>
           {selectedProducts.map((product) => (
             <SelectedFeedRow
-              key={product.id}
+              key={product.uniqueId}
               product={product}
               onQuantityChange={handleInputChange}
               onUnitChange={handleInputChange}

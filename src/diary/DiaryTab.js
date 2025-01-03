@@ -224,7 +224,7 @@ function DiaryTab({ selectedDate, defecationData, playData, hospitalData }) {
                 </div>
               ))}
               <div style={styles.totalAmount}>
-                <strong>{totalCalories} kcal</strong>
+                <strong>{totalCalories.toFixed(2)} kcal</strong>
               </div>
             </>
           ) : (
@@ -400,9 +400,9 @@ const styles = {
   categoryButtonBlue: {
     width: "30px",
     display: "inline-block",
-    padding: "5px 5px",
+    padding: "2px 5px",
     fontSize: "12px",
-    backgroundColor: "#CCFFCC", // 하늘색 배경 (파스텔톤)
+    backgroundColor: "#FED7C3", // 하늘색 배경 (파스텔톤)
     color: "#555",
     borderRadius: "10px",
     textAlign: "center",
@@ -411,9 +411,9 @@ const styles = {
   categoryButtonOrange: {
     width: "30px",
     display: "inline-block",
-    padding: "5px 5px",
+    padding: "2px 5px",
     fontSize: "12px",
-    backgroundColor: "#FED7C3", // 주황색 배경
+    backgroundColor: "#CCFFCC", // 주황색 배경
     color: "#555",
     borderRadius: "10px",
     textAlign: "center",
