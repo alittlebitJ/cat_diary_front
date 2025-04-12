@@ -11,10 +11,10 @@ import './global.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState('diary');
-  const [selectedDate, setSelectedDate] = useState(new Date()); // Calendar에서 선택된 날짜 상태 관리
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleDateChange = (newDate) => {
-    setSelectedDate(newDate); // 날짜 변경 시 상태 업데이트
+    setSelectedDate(newDate);
   };
 
   return (
@@ -22,7 +22,7 @@ function App() {
       <header style={styles.header}>
         <WeekCalendar onDateChange={handleDateChange} selectedDate={selectedDate} />
         <nav style={styles.nav}>
-          {[ 
+          {[
             { key: 'diary', label: '일기' },
             { key: 'feed', label: '급여' },
             { key: 'waterIntake', label: '음수' },
@@ -44,25 +44,26 @@ function App() {
         </nav>
       </header>
 
-      {activeTab === 'diary' && <DiaryTab selectedDate={selectedDate} />} 
-      {activeTab === 'feed' && <FeedTab selectedDate={selectedDate} />} 
-      {activeTab === 'waterIntake' && <WaterIntakeTab selectedDate={selectedDate} />} 
-      {activeTab === 'defecation' && <DefecationTab selectedDate={selectedDate} />} 
-      {activeTab === 'play' && <PlayTab selectedDate={selectedDate} />} 
-      {activeTab === 'hospital' && <HospitalTab selectedDate={selectedDate} />} 
+      {activeTab === 'diary' && <DiaryTab selectedDate={selectedDate} />}
+      {activeTab === 'feed' && <FeedTab selectedDate={selectedDate} />}
+      {activeTab === 'waterIntake' && <WaterIntakeTab selectedDate={selectedDate} />}
+      {activeTab === 'defecation' && <DefecationTab selectedDate={selectedDate} />}
+      {activeTab === 'play' && <PlayTab selectedDate={selectedDate} />}
+      {activeTab === 'hospital' && <HospitalTab selectedDate={selectedDate} />}
     </div>
   );
 }
 
 const styles = {
   container: {
-    fontFamily: 'sans-serif',
-    backgroundColor: '#F9FAFB',
+    maxWidth: '400px',
+    margin: '0 auto',
+    padding: '20px',
     minHeight: '100vh',
-    padding: '10px',
     minWidth: '320px',
     boxSizing: 'border-box',
     overflow: 'hidden',
+    height: '100vh',
   },
   header: {
     textAlign: 'center',
@@ -85,17 +86,82 @@ const styles = {
     flex: 1,
     padding: '15px 0',
     border: 'none',
+    borderBottom: '3px solid transparent',
     backgroundColor: '#FFFFFF',
     color: '#333333',
-    fontSize: '1rem',
+    fontSize: '0.9rem',
     fontWeight: '500',
     cursor: 'pointer',
-    transition: 'background-color 0.2s, color 0.2s',
+    transition: 'background-color 0.2s, color 0.2s, border-bottom 0.2s',
   },
   navButtonActive: {
     backgroundColor: '#FFFFFF',
     color: '#CEAD9C',
     borderBottom: '3px solid #CEAD9C',
+  },
+  calendar: {
+    width: '100%',
+    maxWidth: '400px',
+    margin: '0 auto',
+    padding: '20px',
+    backgroundColor: '#fff',
+    borderRadius: '16px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+  },
+  calendarHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+  },
+  calendarTitle: {
+    fontSize: '18px',
+    fontWeight: '600',
+    color: 'rgb(206, 173, 156)',
+  },
+  calendarNav: {
+    display: 'flex',
+    gap: '10px',
+  },
+  calendarNavButton: {
+    padding: '5px 10px',
+    backgroundColor: 'rgb(206, 173, 156)',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontSize: '14px',
+  },
+  calendarGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(7, 1fr)',
+    gap: '5px',
+  },
+  calendarDay: {
+    padding: '10px',
+    textAlign: 'center',
+    fontSize: '14px',
+    color: '#666',
+  },
+  calendarDate: {
+    padding: '10px',
+    textAlign: 'center',
+    cursor: 'pointer',
+    fontSize: '14px',
+    borderRadius: '8px',
+    transition: 'all 0.2s ease',
+  },
+  calendarDateToday: {
+    backgroundColor: 'rgba(206, 173, 156, 0.1)',
+    color: 'rgb(206, 173, 156)',
+    fontWeight: '600',
+  },
+  calendarDateSelected: {
+    backgroundColor: 'rgb(206, 173, 156)',
+    color: '#fff',
+  },
+  calendarDateOtherMonth: {
+    color: '#ccc',
   },
 };
 

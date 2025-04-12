@@ -65,6 +65,9 @@ function WaterIntakeTab({ selectedDate }) { // selectedDate를 props로 받음
 
   return (
     <div style={styles.container}>
+      <div style={styles.sectionTitle}>
+        <h3>음수량</h3>
+      </div>
       <table style={styles.table}>
         <colgroup>
           <col style={{ width: '40%' }} /> {/* '전' 컬럼 */}
@@ -114,16 +117,13 @@ function WaterIntakeTab({ selectedDate }) { // selectedDate를 props로 받음
 
 const styles = {
   container: {
-    width: '100%',
     maxWidth: '400px',
-    margin: '40px auto',
+    margin: '0 auto',
+    padding: '20px',
+    backgroundColor: '#FFFFFF',
     borderRadius: '16px',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    backgroundColor: '#FFFFFF',
     fontFamily: 'sans-serif',
-    textAlign: 'center',
-    paddingTop: '20px',
-    paddingBottom: '20px',
   },
   table: {
     width: '95%',
@@ -144,27 +144,34 @@ const styles = {
   input: {
     width: '90%',
     padding: '10px',
-    border: '1px solid #EAEAEA',
     borderRadius: '8px',
-    fontSize: '1rem',
-    boxSizing: 'border-box',
+    border: '1px solid #ddd',
     outline: 'none',
   },
   result: {
-    fontSize: '1.2rem',
-    fontWeight: '500',
-    color: '#333333',
     marginTop: '20px',
+    fontSize: '1.2rem',
+    color: '#333333',
   },
   submitButton: {
-    marginTop: '20px',
     padding: '10px 20px',
-    backgroundColor: '#CEAD9C', // 색상 변경
-    color: '#FFFFFF',
+    backgroundColor: '#b98c7b',
     border: 'none',
     borderRadius: '8px',
-    fontSize: '1rem',
+    color: '#fff',
     cursor: 'pointer',
+    marginTop: '20px',
+  },
+  sectionTitle: {
+    fontSize: '1rem',
+    fontWeight: '500',
+    color: '#CEAD9C',
+    textAlign: 'left',
+    borderBottom: '1px solid #CEAD9C',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
   },
 };
 

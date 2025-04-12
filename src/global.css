@@ -1,11 +1,61 @@
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%; 
-    overflow: auto;  /* 스크롤을 숨김 */
-  }
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    html, body {
+        font-size: 14px;
+    }
+}
+
+/* 스크롤바 숨기기 - 탭 컨테이너에만 적용 */
+.tab-container::-webkit-scrollbar {
   display: none;
+}
+
+.tab-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  height: 75%;
+}
+
+.tab-container > .scroll-content {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tab-container > .scroll-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* IE and Edge */
+* {
+  -ms-overflow-style: none;
 }
